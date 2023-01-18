@@ -1,0 +1,18 @@
+<html>
+	<head>
+		<script type="text/javascript" src="lib/brotli.min.js"></script>
+		<script type="text/javascript" src="lib/fflate.min.js"></script>
+		<script type="text/javascript" src="cloudtiles.js"></script>
+	</head>
+	<body>
+		<img id="tile">
+		<script type="text/javascript">
+		
+			cloudtiles("http://localhost/cloudtiles/data/hitzekarte.cloudtiles").getTile(9, 274, 170, function(err, tile){
+				if (err) return console.error(err);
+				document.querySelector("#tile").src = (window.URL || window.webkitURL).createObjectURL(tile);
+			});
+		
+		</script>
+	</body>
+</html>

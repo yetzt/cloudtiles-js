@@ -9,12 +9,12 @@ var cloudtiles = function cloudtiles(src) {
 		png: "image/png",
 		jpeg: "image/jpeg",
 		webp: "image/webp",
-		svg: "image/svg+xml",
-		avif: "image/avif",
-		geojson: "application/geo+json",
-		topojson: "application/topo+json",
-		json: "application/json",
-		bin: "application/octet-stream",
+		svg: "image/svg+xml", // proposed
+		avif: "image/avif", // proposed
+		geojson: "application/geo+json", // proposed
+		topojson: "application/topo+json", // proposed
+		json: "application/json", // proposed
+		bin: "application/octet-stream", // proposed
 		pbf: "application/x-protobuf",
 	};
 
@@ -34,22 +34,18 @@ var cloudtiles = function cloudtiles(src) {
 cloudtiles.prototype.read = function(position, length, fn){
 	var self = this;
 		
-	var range = position.toString() + "-" + (position+length).toString();
+	var range = position.toString() + "-" + (position+length).toString(); // explicit string casting for BigInt 
 		
 	// queue callbacks
 	if (self.queue.hasOwnProperty(range)) return self.queue[range].push(fn), self;
 	self.queue[range] = [ fn ];
 
-	function end(){
-		
-	}
-		
 	fetch(self.src, {
 		headers: { "Range": "bytes=" + range }
 	}).then(function(resp){
 		if (!resp.ok) return fn(new Error("Server replied with HTTP Status Code "+resp.status));
 		resp.arrayBuffer().then(function(buf){
-			self.queue[range].forEach(function(f){ f(null, buf); });
+			self.queue[range].forEach(function(f){ f(null, buf); }); // call all queued callbacks
 			delete self.queue[range];
 		}).catch(function(err){
 			self.queue[range].forEach(function(f){ f(err); });

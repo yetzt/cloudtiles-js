@@ -25,6 +25,8 @@ var cloudtiles = function cloudtiles(src) {
 	self.zoom = null;
 	self.bbox = null;
 	
+	self.queue = {};
+	
 	return this;
 };
 
@@ -32,18 +34,32 @@ var cloudtiles = function cloudtiles(src) {
 cloudtiles.prototype.read = function(position, length, fn){
 	var self = this;
 		
+	var range = position.toString() + "-" + (position+length).toString();
+		
+	// queue callbacks
+	if (self.queue.hasOwnProperty(range)) return self.queue[range].push(fn), self;
+	self.queue[range] = [ fn ];
+
+	function end(){
+		
+	}
+		
 	fetch(self.src, {
-		headers: { "Range": "bytes=" + position.toString() + "-" + (position+length).toString() }
+		headers: { "Range": "bytes=" + range }
 	}).then(function(resp){
 		if (!resp.ok) return fn(new Error("Server replied with HTTP Status Code "+resp.status));
 		resp.arrayBuffer().then(function(buf){
-			fn(null, buf);
+			self.queue[range].forEach(function(f){ f(null, buf); });
+			delete self.queue[range];
 		}).catch(function(err){
-			fn(err);
+			self.queue[range].forEach(function(f){ f(err); });
+			delete self.queue[range];
 		});
 	}).catch(function(err){
-		fn(err);
+		self.queue[range].forEach(function(f){ f(err); });
+		delete self.queue[range];
 	});
+	
 	return self;
 };
 
@@ -254,7 +270,6 @@ cloudtiles.prototype.getTile = function(z, x, y, fn){
 
 	return self;
 };
-
 
 // get zoom levels
 cloudtiles.prototype.getZoomLevels = function(fn){

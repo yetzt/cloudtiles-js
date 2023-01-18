@@ -5,12 +5,25 @@
 		<script type="text/javascript" src="cloudtiles.js"></script>
 	</head>
 	<body>
-		<img id="tile">
+		<img id="tile1">
+		<img id="tile2">
+		<br>
+		<img id="tile3">
+		<img id="tile4">
 		<script type="text/javascript">
 		
-			cloudtiles("http://localhost/cloudtiles/data/hitzekarte.cloudtiles").getTile(9, 274, 170, function(err, tile){
+			cloudtiles("https://yetzt.github.io/cloudtiles-js/data/satellite.cloudtiles").getTile(1, 0, 1, function(err, tile){
 				if (err) return console.error(err);
-				document.querySelector("#tile").src = (window.URL || window.webkitURL).createObjectURL(tile);
+				document.querySelector("#tile1").src = (window.URL || window.webkitURL).createObjectURL(tile);
+			}).getTile(1, 1, 1, function(err, tile){
+				if (err) return console.error(err);
+				document.querySelector("#tile2").src = (window.URL || window.webkitURL).createObjectURL(tile);
+			}).getTile(1, 0, 0, function(err, tile){
+				if (err) return console.error(err);
+				document.querySelector("#tile3").src = (window.URL || window.webkitURL).createObjectURL(tile);
+			}).getTile(1, 1, 0, function(err, tile){
+				if (err) return console.error(err);
+				document.querySelector("#tile4").src = (window.URL || window.webkitURL).createObjectURL(tile);
 			});
 		
 		</script>

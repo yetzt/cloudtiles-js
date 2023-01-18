@@ -12,7 +12,7 @@
 		<img id="tile4">
 		<script type="text/javascript">
 		
-			cloudtiles("https://yetzt.github.io/cloudtiles-js/data/satellite.cloudtiles").getTile(1, 0, 1, function(err, tile){
+			cloudtiles("data/satellite.cloudtiles").getTile(1, 0, 1, function(err, tile){
 				if (err) return console.error(err);
 				document.querySelector("#tile1").src = (window.URL || window.webkitURL).createObjectURL(tile);
 			}).getTile(1, 1, 1, function(err, tile){

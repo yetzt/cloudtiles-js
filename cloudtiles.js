@@ -359,7 +359,3 @@ cloudtiles.prototype.decompress = async function(encoding, data, fn){
 	return this;
 };
 
-var ct = cloudtiles("http://localhost/cloudtiles/data/hitzekarte.cloudtiles").getMeta(console.log).getTile(9, 274, 170, function(err, tile){
-	if (err) return console.error(err);
-	document.querySelector("#tile").src = (window.URL || window.webkitURL).createObjectURL(tile);
-});
